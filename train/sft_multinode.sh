@@ -1,5 +1,5 @@
 uid="$(date +%Y%m%d_%H%M%S)"
-base_model="Qwen/Qwen2.5-32B-Instruct" # meta-llama/Llama-3.1-70B-Instruct
+base_model="Qwen/Qwen3-0.6B" # "Qwen/Qwen2.5-32B-Instruct" # meta-llama/Llama-3.1-70B-Instruct
 lr=1e-5
 min_lr=0
 epochs=5
@@ -8,6 +8,11 @@ push_to_hub=true
 gradient_accumulation_steps=1
 max_steps=-1
 gpu_count=$(nvidia-smi -L | wc -l)
+
+# Temp
+NUM_NODES=1
+REPLICA_RANK=0
+REPLICA_HOSTNAME= # Fill in
 
 torchrun \
 --nnodes ${NUM_NODES}:${NUM_NODES} \
@@ -21,12 +26,12 @@ train/sft.py \
 --per_device_train_batch_size=${micro_batch_size} \
 --per_device_eval_batch_size=${micro_batch_size} \
 --gradient_accumulation_steps=${gradient_accumulation_steps} \
---train_file_path="simplescaling/s1K_tokenized" \
---block_size=32768 \
+--train_file_path="/scratch/groups/jamesz/bowen/data/traces/qwen3" \
+--block_size=2000 \
 --model_name=${base_model} \
 --warmup_ratio=0.05 \
 --fsdp="full_shard auto_wrap" \
---fsdp_config="train/fsdp_config_qwen.json" \
+--fsdp_config="train/fsdp_config_qwen3.json" \
 --bf16=True \
 --eval_strategy="steps" \
 --eval_steps=50 \
@@ -37,10 +42,13 @@ train/sft.py \
 --weight_decay 1e-4 \
 --adam_beta1 0.9 \
 --adam_beta2 0.95 \
---output_dir="ckpts/s1_${uid}" \
---hub_model_id="simplescaling/s1-${uid}" \
+--output_dir="/scratch/groups/jamesz/bowen/ckpts/s1_${uid}" \
+--hub_model_id="bowen118/s1-${uid}" \
 --push_to_hub=True \
 --hub_always_push=True \
+--hub_private_repo=True \
 --num_train_epochs ${epochs} \
 --save_only_model=True \
---gradient_checkpointing=True
+--gradient_checkpointing=True \
+--wandb_project="papertrace" \
+--wandb_entity="bowen118-stanford-university"
