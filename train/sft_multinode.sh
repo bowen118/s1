@@ -11,17 +11,15 @@ gpu_count=$(nvidia-smi -L | wc -l)
 
 # Temp
 NUM_NODES=1
-REPLICA_RANK=0
 REPLICA_HOSTNAME=10.0.2.15 # Fill in
 
 torchrun \
 --nnodes ${NUM_NODES}:${NUM_NODES} \
---node_rank=$REPLICA_RANK \
 --nproc-per-node ${gpu_count} \
 --rdzv_id=12347 \
 --rdzv_backend=c10d \
 --rdzv_conf='read_timeout=420' \
---rdzv_endpoint=$REPLICA_HOSTNAME:29401 \
+--rdzv_endpoint=$REPLICA_HOSTNAME:29500 \
 train/sft.py \
 --per_device_train_batch_size=${micro_batch_size} \
 --per_device_eval_batch_size=${micro_batch_size} \
