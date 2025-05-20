@@ -1,5 +1,5 @@
 uid="$(date +%Y%m%d_%H%M%S)"
-base_model="Qwen/Qwen3-0.6B" # "Qwen/Qwen2.5-32B-Instruct" # meta-llama/Llama-3.1-70B-Instruct
+base_model="Qwen/Qwen2.5-7B" # "Qwen/Qwen2.5-32B-Instruct" # meta-llama/Llama-3.1-70B-Instruct
 lr=1e-5
 min_lr=0
 epochs=5
@@ -12,7 +12,7 @@ gpu_count=$(nvidia-smi -L | wc -l)
 # Temp
 NUM_NODES=1
 REPLICA_RANK=0
-REPLICA_HOSTNAME= # Fill in
+REPLICA_HOSTNAME=10.0.2.15 # Fill in
 
 torchrun \
 --nnodes ${NUM_NODES}:${NUM_NODES} \
@@ -26,12 +26,12 @@ train/sft.py \
 --per_device_train_batch_size=${micro_batch_size} \
 --per_device_eval_batch_size=${micro_batch_size} \
 --gradient_accumulation_steps=${gradient_accumulation_steps} \
---train_file_path="/scratch/groups/jamesz/bowen/data/traces/qwen3" \
+--train_file_path="/root/papertrace/qwen2" \
 --block_size=32768 \
 --model_name=${base_model} \
 --warmup_ratio=0.05 \
 --fsdp="full_shard auto_wrap" \
---fsdp_config="train/fsdp_config_qwen3.json" \
+--fsdp_config="train/fsdp_config_qwen2.json" \
 --bf16=True \
 --eval_strategy="steps" \
 --eval_steps=50 \
@@ -42,7 +42,7 @@ train/sft.py \
 --weight_decay 1e-4 \
 --adam_beta1 0.9 \
 --adam_beta2 0.95 \
---output_dir="/scratch/groups/jamesz/bowen/ckpts/s1_${uid}" \
+--output_dir="ckpts/s1_${uid}" \
 --hub_model_id="bowen118/s1-${uid}" \
 --push_to_hub=True \
 --hub_always_push=True \
