@@ -24,7 +24,7 @@ train/sft.py \
 --per_device_train_batch_size=${micro_batch_size} \
 --per_device_eval_batch_size=${micro_batch_size} \
 --gradient_accumulation_steps=${gradient_accumulation_steps} \
---train_file_path="/root/papertrace/qwen2" \
+--train_file_path="trace_data/qwen2" \
 --block_size=32768 \
 --model_name=${base_model} \
 --warmup_ratio=0.05 \

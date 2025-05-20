@@ -38,7 +38,6 @@ torchrun --nproc-per-node ${gpu_count} --master_port 12345 \
     --hub_model_id="bowen118/s1-${uid}" \
     --push_to_hub=${push_to_hub} \
     --hub_always_push=True \
-    --hub_private_repo=True \
     --save_only_model=True \
     --wandb_project="papertrace" \
     --wandb_entity="bowen118-stanford-university" \
