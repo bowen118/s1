@@ -40,7 +40,7 @@ torchrun --nproc-per-node ${gpu_count} --master_port 12345 \
     --hub_private_repo=True \
     --save_only_model=True \
     --wandb_project="papertrace" \
-    --wandb_entity="bowen118-stanford-university"
+    --wandb_entity="bowen118-stanford-university" \
     --gradient_checkpointing=True \ # Enable gradient checkpointing for efficient memory usage with 8 H100 GPUs.
     # --accelerator_config='{"gradient_accumulation_kwargs": {"sync_each_batch": true}}'
 
