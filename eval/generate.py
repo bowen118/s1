@@ -9,6 +9,8 @@ tok = AutoTokenizer.from_pretrained(
     "simplescaling/s1"
 )
 
+num_skip = 0
+
 stop_token_ids = tok("<|im_end|>")["input_ids"]
 sampling_params = SamplingParams(
     max_tokens=32768,
@@ -57,7 +59,7 @@ for i, p in enumerate(prompts):
     ignore_str = "Wait"
 
     # Num of times to skip stop token
-    for i in range(1):
+    for i in range(num_skip):
         prompt += o[0].outputs[0].text + ignore_str
         sampling_params = SamplingParams(
             max_tokens=32768,

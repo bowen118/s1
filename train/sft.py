@@ -8,6 +8,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 from datasets import load_dataset, concatenate_datasets, DatasetDict
 import transformers
 import trl
+import torch
 
 @dataclass
 class TrainingConfig:
@@ -81,4 +82,8 @@ def train():
 
 
 if __name__ == "__main__":
+    print('Checking cuda availability...')
+    print(torch.cuda.is_available())
+    print(torch.cuda.device_count())
+    print('Starting training...')
     train()

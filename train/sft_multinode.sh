@@ -44,7 +44,6 @@ train/sft.py \
 --hub_model_id="bowen118/s1-${uid}" \
 --push_to_hub=True \
 --hub_always_push=True \
---hub_private_repo=True \
 --num_train_epochs ${epochs} \
 --save_only_model=True \
 --gradient_checkpointing=True \

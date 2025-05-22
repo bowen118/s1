@@ -3,3 +3,5 @@ ckpts/
 wandb/
 
 trace_data/
+Dockerfile
+*.yaml
