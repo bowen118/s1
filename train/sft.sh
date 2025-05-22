@@ -4,9 +4,9 @@ uid="$(date +%Y%m%d_%H%M%S)"
 base_model="Qwen/Qwen2.5-7B-Instruct" #"Qwen/Qwen3-8B" #"Qwen/Qwen2.5-32B-Instruct"
 lr=1e-5
 min_lr=0
-epochs=5
+epochs=6
 weight_decay=1e-4 # -> the same training pipe as slurm_training
-micro_batch_size=1 # -> batch_size will be 16 if 16 gpus
+micro_batch_size=2 # -> batch_size will be 16 if 16 gpus
 gradient_accumulation_steps=1 # requires more GPU memory
 max_steps=-1
 gpu_count=$(nvidia-smi -L | wc -l)
@@ -14,7 +14,7 @@ push_to_hub=true
 
 torchrun --nproc-per-node ${gpu_count} --master_port 12345 \
     train/sft.py \
-    --block_size=32768 \
+    --block_size=16384 \
     --per_device_train_batch_size=${micro_batch_size} \
     --per_device_eval_batch_size=${micro_batch_size} \
     --gradient_accumulation_steps=${gradient_accumulation_steps} \
@@ -25,10 +25,10 @@ torchrun --nproc-per-node ${gpu_count} --master_port 12345 \
     --fsdp="full_shard auto_wrap" \
     --fsdp_config="train/fsdp_config_qwen2.json" \
     --bf16=True \
-    --eval_strategy="steps" \
+    --eval_strategy="epoch" \
     --eval_steps=50 \
     --logging_steps=1 \
-    --save_steps=100 \
+    --save_strategy="epoch" \
     --lr_scheduler_type="cosine" \
     --learning_rate=${lr} \
     --weight_decay=${weight_decay} \
