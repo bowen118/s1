@@ -26,7 +26,6 @@ torchrun --nproc-per-node ${gpu_count} --master_port 12345 \
     --fsdp_config="train/fsdp_config_qwen2.json" \
     --bf16=True \
     --eval_strategy="epoch" \
-    --eval_steps=50 \
     --logging_steps=1 \
     --save_strategy="epoch" \
     --lr_scheduler_type="cosine" \
